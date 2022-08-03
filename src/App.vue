@@ -1,7 +1,24 @@
 <template>
-  <router-view />
+  <div>
+    <div class="app flex flex-column">
+      <div class="app-content flex">
+        <NavVue />
+        <router-view />
+      </div>
+    </div>
+  </div>
 </template>
 
+<script>
+
+import NavVue from './components/Nav.vue'
+export default {
+  name: 'App',
+  components: {
+    NavVue
+  }
+}
+</script>
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 
@@ -10,7 +27,22 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
+}
+
+.app {
   background-color: #141625;
+  min-height: 100vh;
+  flex-direction: column;
+
+  @media (min-width:900px) {
+    flex-direction: row;
+  }
+
+  .app-content {
+    // padding: 0 20px;
+    flex: 1;
+    position: relative;
+  }
 }
 
 button,
@@ -80,6 +112,7 @@ button,
     border-radius: 50%;
     margin-right: 8px;
   }
+
   font-size: 12px;
   margin-right: 30px;
   align-items: center;
@@ -91,6 +124,7 @@ button,
   &::before {
     background-color: #33d69f;
   }
+
   color: #33d69f;
   background-color: rgba(51, 214, 160, 0.1);
 }
@@ -99,6 +133,7 @@ button,
   &::before {
     background-color: #ff8f00;
   }
+
   color: #ff8f00;
   background-color: rgba(255, 145, 0, 0.1);
 }
@@ -107,6 +142,7 @@ button,
   &::before {
     background-color: #dfe3fa;
   }
+
   color: #dfe3fa;
   background-color: rgba(223, 227, 250, 0.1);
 }
