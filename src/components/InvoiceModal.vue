@@ -101,7 +101,7 @@
                     </table>
 
                     <div @click="addNewInvoiceItem" class="flex button">
-                        <img src="@/assets/icon-plus.svg" alt="" />
+                        <img src="@/assets/icon-plus.svg" alt="new item" />
                         Add New Item
                     </div>
                 </div>
@@ -124,6 +124,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
     name: "InvoiceModal",
     data() {
@@ -148,6 +150,14 @@ export default {
             invoiceDraft: null,
             invoiceItemList: [],
             invoiceTotal: 0,
+        }
+    },
+    computed: {
+        ...mapMutations(['TOGGLE_INVOICE_MODAL'])
+    },
+    methods: {
+        closeInvoice() {
+            this.TOGGLE_INVOICE_MODAL;
         }
     }
 }
