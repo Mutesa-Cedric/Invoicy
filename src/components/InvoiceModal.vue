@@ -125,7 +125,8 @@
 
 <script>
 import { mapMutations } from 'vuex';
-import { uid } from "uid"
+import { uid } from "uid";
+import db from "../firebase/firebaseinit"
 export default {
     name: "InvoiceModal",
     data() {
@@ -175,6 +176,54 @@ export default {
         },
         deleteInvoiceItem(id) {
             this.invoiceItemList = this.invoiceItemList.filter(item => item.id !== id)
+        },
+        publishInvoice() {
+            this.invoicePending = true;
+        },
+        saveDraft() {
+            this.invoiceDraft = true;
+        },
+        calcInvoiceTotal() {
+            this.invoiceTotal = 0;
+            this.invoiceTotal = this.invoiceItemList.reduce((acc, item) => acc + item.total, 0)
+        },
+        async uploadInvoice() {
+            if (this.invoiceItemList.length <= 0) {
+                alert("Please add at least one item to the invoice")
+                return;
+            }
+            this.calcInvoiceTotal();
+
+            const database = db.collection('invoices').doc();
+
+            await database.set({
+                invoiceId: uid(6),
+                billerStreetAddress: this.billerStreetAddress,
+                billerCity: this.billerCity,
+                billerZipCode: this.billerZipCode,
+                billerCountry: this.billerCountry,
+                clientName: this.clientName,
+                clientEmail: this.clientEmail,
+                clientStreetAddress: this.clientStreetAddress,
+                clientCity: this.clientCity,
+                clientZipCode: this.clientZipCode,
+                clientCountry: this.clientCountry,
+                invoiceDate: this.invoiceDate,
+                invoiceDateUnix: this.invoiceDateUnix,
+                paymentTerms: this.paymentTerms,
+                paymentDueDate: this.paymentDueDate,
+                paymentDueDateUnix: this.paymentDueDateUnix,
+                productDescription: this.productDescription,
+                invoiceItemList: this.invoiceItemList,
+                invoiceTotal: this.invoiceTotal,
+                invoicePending: this.invoicePending,
+                invoiceDraft: this.invoiceDraft,
+                invoicePaid: null,
+            })
+            this.TOGGLE_INVOICE_MODAL;
+        },
+        submitForm() {
+            this.uploadInvoice();
         }
     },
     watch: {
