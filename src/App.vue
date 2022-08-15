@@ -3,6 +3,7 @@
     <div v-if="!mobile" class="app flex flex-column">
       <NavVue />
       <div class="app-content flex">
+        <Modal v-show="modalActive"/>
         <transition name="invoice">
           <InvoiceModal v-if="showInvoiceModal" />
         </transition>
@@ -21,12 +22,14 @@
 import NavVue from './components/Nav.vue'
 import InvoiceModal from './components/InvoiceModal.vue';
 import { mapState } from "vuex"
+import Modal from './components/Modal.vue';
 export default {
   name: 'App',
   components: {
     NavVue,
-    InvoiceModal
-  },
+    InvoiceModal,
+    Modal
+},
   data() {
     return {
       mobile: null
@@ -36,7 +39,7 @@ export default {
     window.addEventListener("resize", this.checkScreen)
   },
   computed: {
-    ...mapState(['showInvoiceModal'])
+    ...mapState(['showInvoiceModal','modalActive'])
   },
   methods: {
     checkScreen() {

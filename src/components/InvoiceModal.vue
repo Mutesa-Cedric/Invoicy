@@ -157,13 +157,18 @@ export default {
         };
     },
     computed: {
-        ...mapMutations(["TOGGLE_INVOICE_MODAL"])
+        ...mapMutations(["TOGGLE_INVOICE_MODAL","TOGGLE_MODAL_ACTIVE"])
     },
     created() {
         this.invoiceDateUnix = Date.now();
         this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString("en-us", this.dateOptions);
     },
     methods: {
+        checkClick(e){
+            if(e.target===this.$refs.invoiceWrap){
+                    this.TOGGLE_MODAL_ACTIVE();
+            }
+        },
         closeInvoice() {
             this.TOGGLE_INVOICE_MODAL;
         },
