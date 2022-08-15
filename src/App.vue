@@ -3,7 +3,9 @@
     <div v-if="!mobile" class="app flex flex-column">
       <NavVue />
       <div class="app-content flex">
-        <InvoiceModal v-if="showInvoiceModal" />
+        <transition name="invoice">
+          <InvoiceModal v-if="showInvoiceModal" />
+        </transition>
         <router-view />
       </div>
     </div>
@@ -89,6 +91,7 @@ export default {
 }
 
 // animated invoice
+
 .invoice-enter-active,
 .invoice-leave-active {
   transition: 0.8s ease all;
@@ -96,6 +99,7 @@ export default {
 
 .invoice-enter-from,
 .invoice-leave-to {
+  // we are going to translate the same width as for modal
   transform: translateX(-700px);
 }
 

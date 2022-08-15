@@ -125,11 +125,12 @@
 
 <script>
 import { mapMutations } from 'vuex';
-
+import { uid } from "uid"
 export default {
     name: "InvoiceModal",
     data() {
         return {
+            dateOptions: { year: "numeric", month: "short", day: "numeric" },
             billerStreetAddress: null,
             billerCity: null,
             billerZipCode: null,
@@ -155,9 +156,32 @@ export default {
     computed: {
         ...mapMutations(['TOGGLE_INVOICE_MODAL'])
     },
+    created() {
+        this.invoiceDateUnix = Date.now();
+        this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString('en-us', this.dateOptions)
+    },
     methods: {
         closeInvoice() {
             this.TOGGLE_INVOICE_MODAL;
+        },
+        addNewInvoiceItem() {
+            this.invoiceItemList.push({
+                id: uid(),
+                itemName: "",
+                qty: "",
+                price: 0,
+                total: 0
+            })
+        },
+        deleteInvoiceItem(id) {
+            this.invoiceItemList = this.invoiceItemList.filter(item => item.id !== id)
+        }
+    },
+    watch: {
+        paymentTerms() {
+            const futureDate = new Date();
+            this.paymentDueDateUnix = futureDate.setDate(futureDate.getDate() + parseInt(this.paymentTerms))
+            this.paymentDueDate = new Date(this.paymentDueDateUnix).toLocaleDateString('en-us', this.dateOptions)
         }
     }
 }
