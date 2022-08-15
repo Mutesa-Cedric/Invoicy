@@ -127,10 +127,12 @@
 import { mapMutations } from 'vuex';
 import { uid } from "uid";
 import db from "../firebase/firebaseinit"
+import Loading from './Loading.vue';
 export default {
     name: "InvoiceModal",
     data() {
         return {
+            loading:null,
             dateOptions: { year: "numeric", month: "short", day: "numeric" },
             billerStreetAddress: null,
             billerCity: null,
@@ -152,14 +154,14 @@ export default {
             invoiceDraft: null,
             invoiceItemList: [],
             invoiceTotal: 0,
-        }
+        };
     },
     computed: {
-        ...mapMutations(['TOGGLE_INVOICE_MODAL'])
+        ...mapMutations(["TOGGLE_INVOICE_MODAL"])
     },
     created() {
         this.invoiceDateUnix = Date.now();
-        this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString('en-us', this.dateOptions)
+        this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString("en-us", this.dateOptions);
     },
     methods: {
         closeInvoice() {
@@ -172,10 +174,10 @@ export default {
                 qty: "",
                 price: 0,
                 total: 0
-            })
+            });
         },
         deleteInvoiceItem(id) {
-            this.invoiceItemList = this.invoiceItemList.filter(item => item.id !== id)
+            this.invoiceItemList = this.invoiceItemList.filter(item => item.id !== id);
         },
         publishInvoice() {
             this.invoicePending = true;
@@ -185,17 +187,17 @@ export default {
         },
         calcInvoiceTotal() {
             this.invoiceTotal = 0;
-            this.invoiceTotal = this.invoiceItemList.reduce((acc, item) => acc + item.total, 0)
+            this.invoiceTotal = this.invoiceItemList.reduce((acc, item) => acc + item.total, 0);
         },
         async uploadInvoice() {
             if (this.invoiceItemList.length <= 0) {
-                alert("Please add at least one item to the invoice")
+                alert("Please add at least one item to the invoice");
                 return;
             }
+
+            this.loading=true
             this.calcInvoiceTotal();
-
-            const database = db.collection('invoices').doc();
-
+            const database = db.collection("invoices").doc();
             await database.set({
                 invoiceId: uid(6),
                 billerStreetAddress: this.billerStreetAddress,
@@ -219,7 +221,8 @@ export default {
                 invoicePending: this.invoicePending,
                 invoiceDraft: this.invoiceDraft,
                 invoicePaid: null,
-            })
+            });
+            this.loading=false;
             this.TOGGLE_INVOICE_MODAL;
         },
         submitForm() {
@@ -229,10 +232,11 @@ export default {
     watch: {
         paymentTerms() {
             const futureDate = new Date();
-            this.paymentDueDateUnix = futureDate.setDate(futureDate.getDate() + parseInt(this.paymentTerms))
-            this.paymentDueDate = new Date(this.paymentDueDateUnix).toLocaleDateString('en-us', this.dateOptions)
+            this.paymentDueDateUnix = futureDate.setDate(futureDate.getDate() + parseInt(this.paymentTerms));
+            this.paymentDueDate = new Date(this.paymentDueDateUnix).toLocaleDateString("en-us", this.dateOptions);
         }
-    }
+    },
+    components: { Loading }
 }
 </script>
 
