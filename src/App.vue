@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div v-if="invoicesLoaded">
     <div v-if="!mobile" class="app flex flex-column">
       <NavVue />
       <div class="app-content flex">
-        <Modal v-show="modalActive"/>
+        <Modal v-show="modalActive" />
         <transition name="invoice">
           <InvoiceModal v-if="showInvoiceModal" />
         </transition>
@@ -21,7 +21,7 @@
 
 import NavVue from './components/Nav.vue'
 import InvoiceModal from './components/InvoiceModal.vue';
-import { mapState } from "vuex"
+import { mapState, mapActions } from "vuex"
 import Modal from './components/Modal.vue';
 export default {
   name: 'App',
@@ -29,19 +29,21 @@ export default {
     NavVue,
     InvoiceModal,
     Modal
-},
+  },
   data() {
     return {
       mobile: null
     }
   },
   created() {
-    window.addEventListener("resize", this.checkScreen)
+    window.addEventListener("resize", this.checkScreen),
+      this.GET_INVOICES();
   },
   computed: {
-    ...mapState(['showInvoiceModal','modalActive'])
+    ...mapState(['showInvoiceModal', 'modalActive', 'invoicesLoaded'])
   },
   methods: {
+    ...mapActions(['GET_INVOICES']),
     checkScreen() {
       const windowWidth = window.innerWidth;
       if (windowWidth <= 750) {
