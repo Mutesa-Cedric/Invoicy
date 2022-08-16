@@ -11,21 +11,27 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 
 export default {
     name: "Modal",
     methods: {
-        ...mapMutations(['TOGGLE_MODAL_ACTIVE', "TOGGLE_INVOICE_MODAL"]),
+        ...mapMutations(['TOGGLE_MODAL_ACTIVE', "TOGGLE_INVOICE_MODAL", "TOGGLE_EDIT_INVOICE"]),
         closeModal() {
             this.TOGGLE_MODAL_ACTIVE();
         },
         closeInvoice() {
             this.TOGGLE_INVOICE_MODAL();
             this.TOGGLE_MODAL_ACTIVE();
+            if (this.editInvoice) {
+                this.TOGGLE_EDIT_INVOICE();
+            }
         }
 
+    },
+    computed: {
+        ...mapState(['editInvoice'])
     }
 }
 </script>

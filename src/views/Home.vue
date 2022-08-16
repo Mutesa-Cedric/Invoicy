@@ -57,7 +57,7 @@ export default {
   methods: {
     ...mapMutations(['TOGGLE_INVOICE_MODAL']),
     newInvoice() {
-      this.TOGGLE_INVOICE_MODAL
+      this.TOGGLE_INVOICE_MODAL();
     },
     toggleFilterMenu() {
       this.filterMenu = !this.filterMenu
