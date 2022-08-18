@@ -4,17 +4,17 @@
     <div class="header flex">
       <div class="left flex flex-column">
         <h1>invoices</h1>
-        <span>there are 4 total invoices</span>
+        <span>there are {{invoiceData.length}} total invoices</span>
       </div>
       <div class="right flex">
         <div @click="toggleFilterMenu" class="filter flex">
-          <span>Filter by status</span>
+          <span>Filter by status <span v-if="filteredInvoice">: {{ filteredInvoice }}</span></span>
           <img src="@/assets/icon-arrow-down.svg" alt="dropdown">
           <ul v-show="filterMenu" class="filter-menu">
-            <li>Draft</li>
-            <li>Pending</li>
-            <li>Paid</li>
-            <li>Clear Filter</li>
+           <li @click="filteredInvoices">Draft</li>
+            <li @click="filteredInvoices">Pending</li>
+            <li @click="filteredInvoices">Paid</li>
+            <li @click="filteredInvoices">Clear Filter</li>
           </ul>
         </div>
         <div @click="newInvoice" class="button flex">
@@ -26,8 +26,8 @@
       </div>
     </div>
     <!-- invoices -->
-    <div v-if="invoiceData.length > 0">
-      <Invoice :invoice="invoice" v-for="(invoice, index) in invoiceData" :key="index" />
+    <div v-if="filteredData.length > 0">
+      <Invoice :invoice="invoice" v-for="(invoice, index) in filteredData" :key="index" />
     </div>
     <div v-else class="flex empty flex-column">
       <img src="@/assets/illustration-empty.svg" alt="" />
@@ -48,11 +48,26 @@ export default {
   },
   data() {
     return {
-      filterMenu: null
+      filterMenu: null,
+      filteredInvoice:null
     }
   },
   computed: {
-    ...mapState(['invoiceData'])
+    ...mapState(['invoiceData']),
+   filteredData() {
+      return this.invoiceData.filter((invoice) => {
+        if (this.filteredInvoice === "Draft") {
+          return invoice.invoiceDraft === true;
+        }
+        if (this.filteredInvoice === "Pending") {
+          return invoice.invoicePending === true;
+        }
+        if (this.filteredInvoice === "Paid") {
+          return invoice.invoicePaid === true;
+        }
+        return invoice;
+      });
+    },
   },
   methods: {
     ...mapMutations(['TOGGLE_INVOICE_MODAL']),
@@ -61,7 +76,14 @@ export default {
     },
     toggleFilterMenu() {
       this.filterMenu = !this.filterMenu
-    }
+    },
+    filteredInvoices(e) {
+      if (e.target.innerText === "Clear Filter") {
+        this.filteredInvoice = null;
+        return;
+      }
+      this.filteredInvoice = e.target.innerText;
+    },
   }
 };
 </script>
