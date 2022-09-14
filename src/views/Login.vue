@@ -36,8 +36,23 @@ export default {
         async login() {
             try {
                 await this.login({ email: this.email, password: this.password });
+                this.$router.push('/')
             } catch (error) {
-                this.error = error.message;
+                switch (error.message) {
+                    case 'auth/user-not-found':
+                        this.error = 'User not found!';
+                        break;
+                    case 'auth/invalid-password':
+                        this.error = "invalid email or password!";
+                        break;
+                    case 'auth/invalid-email':
+                        this.error = "Email is invalid";
+                        break;
+                    case 'auth/internal-error':
+                        this.error = "there was a server error!";
+                        break;
+                    default: this.error = 'Invalid email or password!';
+                }
             }
         }
     }

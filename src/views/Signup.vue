@@ -1,13 +1,12 @@
 <template>
     <div class="main-container flex flex-column">
-
         <form @submit.prevent="signup()" class="flex flex-column dark-purple">
             <div class="create-account">
                 <p>Create account</p>
             </div>
             <input type="email" v-model="email" placeholder="enter your email address" />
             <input type="text" v-model="name" placeholder="enter your username" />
-            <input typ="password" v-model="password" placeholder="choose password" />
+            <input type="password" v-model="password" placeholder="choose password" />
             <button type="submit" class="btn btn-primary purple">
                 Sign Up
             </button>
@@ -19,16 +18,12 @@
                 {{error}}
             </div>
         </form>
-
     </div>
-
 </template>
 
 <script>
 
 import { mapActions } from 'vuex';
-import { useRouter } from 'vue-router';
-const router = useRouter();
 export default {
     name: "Signup",
     data() {
@@ -38,7 +33,6 @@ export default {
             name: '',
             error: null,
         }
-
     },
     methods: {
         ...mapActions(['register']),
@@ -49,9 +43,23 @@ export default {
                     password: this.password,
                     name: this.name
                 });
-                router.push('/');
+                this.$router.push('/');
             } catch (err) {
-                this.error = err.message;
+                switch (err.message) {
+                    case 'auth/email-already-exists':
+                        this.error = 'Email already exists!';
+                        break;
+                    case 'auth/internal-error':
+                        this.error = "there was a server error!";
+                        break;
+                    case 'auth/invalid-email':
+                        this.error = "invalid email!";
+                        break;
+                    case 'auth/invalid-password':
+                        this.error = "invalid password!";
+                        break;
+                    default: this.error = "Invalid email or passowrd!"
+                }
             }
         }
     }

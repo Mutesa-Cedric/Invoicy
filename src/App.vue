@@ -23,6 +23,7 @@ import NavVue from './components/Nav.vue'
 import InvoiceModal from './components/InvoiceModal.vue';
 import { mapState, mapActions } from "vuex"
 import Modal from './components/Modal.vue';
+import { auth } from './firebase/firebaseinit';
 // import { useRouter } from 'vue-router';
 // const router = useRouter();
 export default {
@@ -40,7 +41,15 @@ export default {
   created() {
     window.addEventListener("resize", this.checkScreen),
       this.GET_INVOICES();
-      if(!this.user.isLoggedIn) return this.$router.push("/signup")
+      // if(!this.user.isLoggedIn) return this.$router.push("/signup");
+      auth.onAuthStateChanged(user => {
+        if(user) {
+          this.fetchUser(user);
+          this.GET_INVOICES();
+        } else {
+          this.$router.push("/signup");
+        }
+      })
   },
   computed: {
     ...mapState(['showInvoiceModal', 'modalActive', 'invoicesLoaded','user'])
