@@ -3,7 +3,7 @@ import "firebase/compat/firestore";
 import { getAuth } from "firebase/auth"
 
 const firebaseConfig = {
-  apiKey: process.env.API_KEY,
+  apiKey: "AIzaSyDQNV2JPEulbPPugRLY7TxjTOh5b7h54Lk",
   authDomain: "invoicy-dde37.firebaseapp.com",
   projectId: "invoicy-dde37",
   storageBucket: "invoicy-dde37.appspot.com",
