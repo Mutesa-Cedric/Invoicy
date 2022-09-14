@@ -23,6 +23,8 @@ import NavVue from './components/Nav.vue'
 import InvoiceModal from './components/InvoiceModal.vue';
 import { mapState, mapActions } from "vuex"
 import Modal from './components/Modal.vue';
+// import { useRouter } from 'vue-router';
+// const router = useRouter();
 export default {
   name: 'App',
   components: {
@@ -38,12 +40,13 @@ export default {
   created() {
     window.addEventListener("resize", this.checkScreen),
       this.GET_INVOICES();
+      if(!this.user.isLoggedIn) return this.$router.push("/signup")
   },
   computed: {
-    ...mapState(['showInvoiceModal', 'modalActive', 'invoicesLoaded'])
+    ...mapState(['showInvoiceModal', 'modalActive', 'invoicesLoaded','user'])
   },
   methods: {
-    ...mapActions(['GET_INVOICES']),
+    ...mapActions(['GET_INVOICES', 'fetchUser']),
     checkScreen() {
       const windowWidth = window.innerWidth;
       if (windowWidth <= 750) {

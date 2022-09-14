@@ -126,7 +126,7 @@
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
 import { uid } from "uid";
-import db from "../firebase/firebaseinit"
+import {db} from "../firebase/firebaseinit"
 import Loading from './Loading.vue';
 export default {
     name: "InvoiceModal",
